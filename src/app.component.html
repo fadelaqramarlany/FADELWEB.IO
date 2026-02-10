@@ -1,0 +1,31 @@
+<div class="min-h-screen flex flex-col">
+  <app-navbar (navigate)="scrollToSection($event)"></app-navbar>
+  
+  <main class="flex-grow pt-16">
+    <section id="beranda">
+      <app-hero (ctaClick)="scrollToSection('jenis-web')"></app-hero>
+    </section>
+
+    <section id="ai-help" class="py-12 bg-white">
+      <app-ai-consultant></app-ai-consultant>
+    </section>
+
+    <section id="tentang-kami" class="py-12 bg-slate-50">
+      <app-about></app-about>
+    </section>
+
+    <section id="jenis-web" class="py-12 bg-white">
+      <app-pricing></app-pricing>
+    </section>
+
+    <section id="order" class="py-12 bg-slate-50">
+      <app-order></app-order>
+    </section>
+
+    <section id="pembayaran" class="py-12 bg-white">
+      <app-payment></app-payment>
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+</div>
