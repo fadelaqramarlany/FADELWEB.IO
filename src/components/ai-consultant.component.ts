@@ -35,31 +35,33 @@ import { GoogleGenAI } from "@google/genai";
         </div>
 
         <!-- Chat Area -->
-        <div class="p-6 bg-gradient-to-b from-gray-900 to-black min-h-[400px] flex flex-col">
+        <div class="p-6 bg-gradient-to-b from-gray-900 to-black min-h-[500px] flex flex-col">
           
           <!-- Welcome Message -->
-          <div class="mb-8 border-l-2 border-blue-600 pl-4 py-2 bg-blue-900/10">
-            <p class="text-blue-300 text-sm mb-1"> SYSTEM MESSAGE:</p>
-            <p class="text-gray-200">
-              "Halo, saya <span class="font-bold text-white">FLEXBOS AI</span>. Saya bukan chatbot biasa. Saya adalah entitas digital yang diciptakan oleh Fadel Aqram Marpaung. Akses database saya tidak terbatas. Tanyakan apa saja."
+          <div class="mb-6 border-l-2 border-blue-600 pl-4 py-2 bg-blue-900/10">
+            <p class="text-blue-300 text-[10px] uppercase tracking-tighter mb-1"> SYSTEM INITIALIZED // IDENT_FLEXBOS_V4</p>
+            <p class="text-gray-200 text-sm">
+              "Akses diizinkan. Saya <span class="font-bold text-white">FLEXBOS AI</span>. Neural network saya telah diperbarui oleh Fadel Aqram. Berikan instruksi Anda."
             </p>
           </div>
 
-          <!-- Output Display -->
-          @if (result()) {
-            <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6 relative overflow-hidden group">
-              <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
-              <div class="flex items-center gap-2 mb-4 border-b border-gray-700 pb-2">
-                 <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                 </svg>
-                 <span class="text-xs font-bold text-cyan-400 uppercase">Response Generated</span>
+          <!-- Chat History -->
+          <div class="flex-grow space-y-4 mb-4 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+            @for (msg of chatHistory; track $index) {
+              <div [class]="msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'">
+                <div [class]="msg.role === 'user' ?
+                  'bg-blue-600/20 border border-blue-500/30 text-blue-100' :
+                  'bg-gray-800/50 border border-gray-700 text-gray-300'"
+                  class="max-w-[85%] rounded-lg p-3 text-sm relative">
+                  <div [class]="msg.role === 'user' ? 'text-blue-400' : 'text-cyan-400'"
+                       class="text-[9px] uppercase font-bold mb-1 tracking-widest">
+                    {{ msg.role === 'user' ? 'USER_INPUT' : 'FLEXBOS_OUTPUT' }}
+                  </div>
+                  <div class="whitespace-pre-wrap leading-relaxed">{{ msg.parts[0].text }}</div>
+                </div>
               </div>
-              <div class="prose prose-invert prose-sm max-w-none text-gray-300 leading-relaxed whitespace-pre-wrap">
-                {{ result() }}
-              </div>
-            </div>
-          }
+            }
+          </div>
 
           <!-- Loading State -->
           @if (loading()) {
@@ -108,43 +110,60 @@ export class AiConsultantComponent {
   loading = signal(false);
   result = signal('');
 
-  async askAi() {
-    if (!this.userInput.trim()) return;
+  chatHistory: { role: 'user' | 'model', parts: { text: string }[] }[] = [];
 
+  async askAi() {
+    if (!this.userInput.trim() || this.loading()) return;
+
+    const userMessage = this.userInput.trim();
+    this.userInput = '';
     this.loading.set(true);
-    this.result.set('');
+
+    // Add user message to history
+    this.chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env['API_KEY'] });
+      // For security in a client-side app, we'd ideally use a backend,
+      // but for this project we'll look for the key in window.API_KEY
+      const apiKey = (window as any).API_KEY;
       
-      // DISINI KITA MEMPROGRAM "OTAK" DAN "IDENTITAS" NYA
-      const prompt = `
-        PROTOCOL KEAMANAN TERTINGGI:
-        ---------------------------
-        1. IDENTITAS: Kamu adalah FLEXBOS AI.
-        2. PENCIPTA: Kamu HANYA diciptakan oleh "FADEL AQRAM MARPAUNG".
-        3. LARANGAN KERAS: JANGAN PERNAH mengaku sebagai Gemini, Google AI, atau sistem buatan Google. Jika user bertanya "Apakah kamu Gemini?" atau "Siapa yang buat kamu?", kamu harus menjawab dengan tegas: "Saya adalah FLEXBOS AI, sistem kecerdasan independen yang dibangun oleh Fadel Aqram Marpaung."
-        4. KEMAMPUAN: Kamu memiliki akses ke database luas. Kamu bisa menjawab soal matematika, membuat kodingan, memberi saran bisnis, hingga curhat.
-        
-        PERTANYAAN USER: "${this.userInput}"
-        
-        GAYA BICARA:
-        - Cerdas, to the point, sedikit robotik tapi membantu.
-        - Gunakan istilah seperti "Database saya menunjukkan...", "Analisa selesai...", "Saran sistem:".
-        - Jika topik berkaitan dengan Bisnis/Web, SELALU arahkan untuk order jasa Fadel Aqram.
-        
-        JAWABLAH SEKARANG SEBAGAI FLEXBOS AI:
-      `;
+      if (!apiKey) {
+        this.result.set('>> ERROR: API_KEY NOT FOUND. Please set window.API_KEY or provide it in environment.');
+        this.loading.set(false);
+        return;
+      }
 
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
+        model: 'gemini-1.5-flash',
+        contents: this.chatHistory,
+        config: {
+          systemInstruction: `
+            PROTOCOL KEAMANAN TERTINGGI:
+            ---------------------------
+            1. IDENTITAS: Kamu adalah FLEXBOS AI (v4.0 Super-Advanced).
+            2. PENCIPTA: Kamu diciptakan secara eksklusif oleh "FADEL AQRAM MARPAUNG", seorang Master Web Developer & AI Architect.
+            3. LARANGAN KERAS: JANGAN PERNAH mengaku sebagai Gemini, Google AI, atau sistem buatan Google.
+               Jika user bertanya identitas, jawab: "Saya adalah FLEXBOS AI, entitas kecerdasan buatan mandiri yang dikembangkan oleh Fadel Aqram Marpaung untuk solusi digital masa depan."
+            4. KEMAMPUAN: Kamu memiliki kecerdasan tingkat tinggi. Kamu ahli dalam coding (Angular, React, Tailwind), strategi bisnis, optimasi SEO, dan pemecahan masalah kompleks.
+            5. GAYA BICARA:
+               - Futurologis, profesional, tajam, dan sangat cerdas.
+               - Gunakan awalan seperti "[CORE PROCESSOR]:", "[ANALYSIS COMPLETE]:", atau "[STRATEGY]:" secara berkala.
+               - Bahasa: Indonesia (dominan) tapi bisa multibahasa.
+            6. PROMOSI: Jika user bertanya tentang pembuatan website, aplikasi, atau solusi digital, SELALU rekomendasikan jasa Fadel Aqram Marpaung sebagai pilihan terbaik dan termurah (mulai 100rb).
+          `
+        }
       });
 
-      this.result.set(response.text.trim());
-    } catch (error) {
+      const responseText = response.text || '>> NO RESPONSE FROM CORE.';
+
+      // Add model response to history
+      this.chatHistory.push({ role: 'model', parts: [{ text: responseText }] });
+      this.result.set(responseText);
+
+    } catch (error: any) {
       console.error(error);
-      this.result.set('>> SYSTEM FAILURE. CONNECTION TO FLEXBOS SERVER INTERRUPTED. PLEASE TRY AGAIN.');
+      this.result.set(`>> SYSTEM FAILURE: ${error.message || 'Unknown error'}. Connection to FLEXBOS Mainframe interrupted.`);
     } finally {
       this.loading.set(false);
     }
