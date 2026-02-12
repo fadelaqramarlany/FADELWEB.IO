@@ -11,8 +11,8 @@ import { CommonModule } from '@angular/common';
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
           <div class="flex-shrink-0 flex items-center cursor-pointer gap-2" (click)="onNavClick('beranda')">
-            <div class="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">F</div>
-            <span class="text-2xl font-bold text-gray-900 tracking-tight">Fadel<span class="text-blue-600">Web</span></span>
+            <div class="h-8 w-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xl border border-gray-700 shadow-lg">F</div>
+            <span class="text-2xl font-bold text-gray-900 tracking-tight font-mono">FADELWEB<span class="text-blue-600">.IO</span></span>
           </div>
           
           <!-- Mobile menu button -->
