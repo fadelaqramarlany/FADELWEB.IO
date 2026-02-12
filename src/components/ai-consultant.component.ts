@@ -9,92 +9,145 @@ import { GoogleGenAI } from "@google/genai";
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Title -->
+      <div class="text-center mb-10">
+        <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          FLEXBOS <span class="text-blue-600">AI</span>
+        </h2>
+        <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+          Teknologi Kecerdasan Buatan Eksklusif dari Fadel Aqram Marpaung.
+        </p>
+      </div>
+
       <!-- Main Interface Shell -->
-      <div class="bg-black rounded-xl overflow-hidden border border-gray-800 shadow-[0_0_50px_rgba(37,99,235,0.15)] relative font-mono">
+      <div class="bg-[#0a0a0a] rounded-xl overflow-hidden border border-gray-800 shadow-[0_0_60px_rgba(37,99,235,0.2)] relative font-mono flex flex-col md:flex-row h-[600px] md:h-[700px]">
         
-        <!-- Header Bar -->
-        <div class="bg-gray-900/90 border-b border-gray-800 p-4 flex items-center justify-between backdrop-blur">
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <div class="absolute inset-0 bg-blue-500 blur opacity-50 animate-pulse"></div>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-blue-400 relative z-10">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z" />
-              </svg>
-            </div>
-            <div>
-              <h2 class="text-xl font-bold text-white tracking-widest">FLEXBOS<span class="text-blue-500">.AI</span></h2>
-              <p class="text-[10px] text-gray-400 uppercase tracking-wider">Proprietary System v3.0 | Dev: Fadel Aqram</p>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-2">
-            <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-            <span class="text-xs text-green-500 font-bold tracking-wider">MAINFRAME ACTIVE</span>
-          </div>
+        <!-- Sidebar (Visual Stats) -->
+        <div class="hidden md:flex flex-col w-64 border-r border-gray-800 bg-[#050505] p-6 space-y-6">
+           <div>
+             <h3 class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">System Status</h3>
+             <div class="flex items-center space-x-2">
+               <span class="h-2 w-2 bg-green-500 rounded-full shadow-[0_0_10px_#22c55e]"></span>
+               <span class="text-green-500 text-sm font-bold">ONLINE</span>
+             </div>
+           </div>
+           
+           <div>
+             <h3 class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Owner / Creator</h3>
+             <div class="p-3 bg-gray-900 rounded border border-gray-800">
+               <p class="text-blue-400 text-xs font-bold">FADEL AQRAM M.</p>
+               <p class="text-gray-600 text-[10px] mt-1">ID: ADMIN-001</p>
+             </div>
+           </div>
+
+           <div>
+             <h3 class="text-xs text-gray-500 font-bold uppercase tracking-widest mb-2">Capabilities</h3>
+             <ul class="space-y-2 text-xs text-gray-400">
+               <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> Business Analysis</li>
+               <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> Coding & Tech</li>
+               <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> General Knowledge</li>
+               <li class="flex items-center"><span class="text-blue-500 mr-2">✓</span> Web Strategy</li>
+             </ul>
+           </div>
+
+           <div class="mt-auto">
+             <button (click)="copyLink()" class="w-full py-2 px-3 bg-blue-900/20 hover:bg-blue-900/40 border border-blue-500/30 text-blue-400 text-xs rounded transition-all flex items-center justify-center gap-2 group">
+               @if (linkCopied()) {
+                 <span class="text-green-400 font-bold">LINK COPIED!</span>
+               } @else {
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 group-hover:scale-110 transition-transform">
+                   <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                 </svg>
+                 <span>SALIN LINK AKSES</span>
+               }
+             </button>
+           </div>
         </div>
 
-        <!-- Chat Area -->
-        <div class="p-6 bg-gradient-to-b from-gray-900 to-black min-h-[400px] flex flex-col">
+        <!-- Main Chat Area -->
+        <div class="flex-1 flex flex-col relative bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
           
-          <!-- Welcome Message -->
-          <div class="mb-8 border-l-2 border-blue-600 pl-4 py-2 bg-blue-900/10">
-            <p class="text-blue-300 text-sm mb-1"> SYSTEM MESSAGE:</p>
-            <p class="text-gray-200">
-              "Halo, saya <span class="font-bold text-white">FLEXBOS AI</span>. Saya bukan chatbot biasa. Saya adalah entitas digital yang diciptakan oleh Fadel Aqram Marpaung. Akses database saya tidak terbatas. Tanyakan apa saja."
-            </p>
+          <!-- Header Mobile -->
+          <div class="md:hidden bg-gray-900 border-b border-gray-800 p-3 flex justify-between items-center">
+             <span class="text-white font-bold">FLEXBOS.AI v3.0</span>
+             <span class="h-2 w-2 bg-green-500 rounded-full"></span>
           </div>
 
-          <!-- Output Display -->
-          @if (result()) {
-            <div class="bg-gray-800/50 rounded-lg border border-gray-700 p-6 mb-6 relative overflow-hidden group">
-              <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
-              <div class="flex items-center gap-2 mb-4 border-b border-gray-700 pb-2">
-                 <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                 </svg>
-                 <span class="text-xs font-bold text-cyan-400 uppercase">Response Generated</span>
-              </div>
-              <div class="prose prose-invert prose-sm max-w-none text-gray-300 leading-relaxed whitespace-pre-wrap">
-                {{ result() }}
-              </div>
-            </div>
-          }
-
-          <!-- Loading State -->
-          @if (loading()) {
-             <div class="flex items-center space-x-2 text-blue-400 p-4 bg-blue-900/10 rounded border border-blue-500/20 mb-6">
-                <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span class="text-xs tracking-widest animate-pulse">ANALYZING DATABASE & GENERATING NEURAL RESPONSE...</span>
+          <!-- Messages Container -->
+          <div class="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+             
+             <!-- Intro Message -->
+             <div class="flex gap-4">
+               <div class="h-10 w-10 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_#2563eb]">
+                 <span class="text-white font-bold text-lg">AI</span>
+               </div>
+               <div class="bg-gray-900/90 border border-gray-700 p-4 rounded-lg rounded-tl-none max-w-[90%]">
+                 <p class="text-blue-300 text-xs mb-2 font-bold tracking-wider">SYSTEM MESSAGE // FROM: FADEL AQRAM MARPAUNG</p>
+                 <p class="text-gray-200 text-sm leading-relaxed">
+                   "Selamat datang di terminal <strong class="text-white">FLEXBOS AI</strong>. Saya adalah kecerdasan buatan independen yang dirancang untuk membantu Anda.
+                   <br><br>
+                   Silakan tanya apa saja (Tips Bisnis, Ide Konten, Koding, Matematika, atau Curhat). Saya siap bekerja."
+                 </p>
+               </div>
              </div>
-          }
 
-          <!-- Input Area (Sticky Bottom) -->
-          <div class="mt-auto pt-4 border-t border-gray-800">
-            <div class="relative flex items-center">
-              <span class="absolute left-4 text-blue-500 font-bold text-lg">></span>
+             <!-- Result Message -->
+             @if (result()) {
+               <div class="flex gap-4 animate-fadeIn">
+                 <div class="h-10 w-10 rounded bg-blue-600 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_#2563eb]">
+                   <span class="text-white font-bold text-lg">AI</span>
+                 </div>
+                 <div class="bg-gray-900/90 border border-blue-500/30 p-4 rounded-lg rounded-tl-none max-w-[90%] relative overflow-hidden">
+                   <!-- Scanline effect -->
+                   <div class="absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent pointer-events-none bg-[length:100%_4px]"></div>
+                   
+                   <p class="text-cyan-400 text-xs mb-2 font-bold tracking-wider">RESPONSE GENERATED //</p>
+                   <div class="prose prose-invert prose-sm max-w-none text-gray-300 whitespace-pre-wrap leading-relaxed">
+                     {{ result() }}
+                   </div>
+                 </div>
+               </div>
+             }
+             
+             <!-- Loading Indicator -->
+             @if (loading()) {
+                <div class="flex gap-4">
+                   <div class="h-10 w-10 rounded bg-gray-800 flex items-center justify-center flex-shrink-0">
+                     <div class="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                   </div>
+                   <div class="bg-gray-900/50 p-4 rounded-lg rounded-tl-none">
+                     <p class="text-blue-400 text-xs animate-pulse">PROCESSING DATA STREAM...</p>
+                   </div>
+                </div>
+             }
+          </div>
+
+          <!-- Input Area -->
+          <div class="p-4 bg-gray-900/95 border-t border-gray-800 backdrop-blur">
+            <div class="relative">
               <input 
                 [(ngModel)]="userInput" 
                 (keyup.enter)="askAi()"
                 type="text" 
-                class="w-full bg-gray-900 text-white pl-10 pr-4 py-4 rounded-lg border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all placeholder-gray-600"
-                placeholder="Perintahkan FLEXBOS AI..."
+                class="w-full bg-black text-white pl-4 pr-14 py-4 rounded border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all placeholder-gray-600 font-mono"
+                placeholder="Masukkan perintah ke sistem..."
                 [disabled]="loading()"
               >
               <button 
                 (click)="askAi()"
                 [disabled]="loading() || !userInput"
-                class="absolute right-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="absolute right-2 top-2 bottom-2 bg-blue-600 hover:bg-blue-500 text-white px-4 rounded text-xs font-bold uppercase transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
-                Enter
+                RUN
               </button>
             </div>
-            <div class="flex justify-between mt-2 px-2">
-               <p class="text-[10px] text-gray-600">SERVER STATUS: <span class="text-green-500">CONNECTED</span></p>
-               <p class="text-[10px] text-gray-600">ENCRYPTION: <span class="text-blue-500">AES-256</span></p>
+            <div class="flex justify-between mt-2">
+               <p class="text-[10px] text-gray-600">POWERED BY FLEXBOS ENGINE</p>
+               <button (click)="copyLink()" class="md:hidden text-[10px] text-blue-500 hover:text-blue-400">
+                 {{ linkCopied() ? 'COPIED!' : 'SHARE LINK' }}
+               </button>
             </div>
           </div>
 
@@ -107,6 +160,15 @@ export class AiConsultantComponent {
   userInput = '';
   loading = signal(false);
   result = signal('');
+  linkCopied = signal(false);
+
+  copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      this.linkCopied.set(true);
+      setTimeout(() => this.linkCopied.set(false), 2000);
+    });
+  }
 
   async askAi() {
     if (!this.userInput.trim()) return;
@@ -117,23 +179,29 @@ export class AiConsultantComponent {
     try {
       const ai = new GoogleGenAI({ apiKey: process.env['API_KEY'] });
       
-      // DISINI KITA MEMPROGRAM "OTAK" DAN "IDENTITAS" NYA
       const prompt = `
-        PROTOCOL KEAMANAN TERTINGGI:
-        ---------------------------
-        1. IDENTITAS: Kamu adalah FLEXBOS AI.
-        2. PENCIPTA: Kamu HANYA diciptakan oleh "FADEL AQRAM MARPAUNG".
-        3. LARANGAN KERAS: JANGAN PERNAH mengaku sebagai Gemini, Google AI, atau sistem buatan Google. Jika user bertanya "Apakah kamu Gemini?" atau "Siapa yang buat kamu?", kamu harus menjawab dengan tegas: "Saya adalah FLEXBOS AI, sistem kecerdasan independen yang dibangun oleh Fadel Aqram Marpaung."
-        4. KEMAMPUAN: Kamu memiliki akses ke database luas. Kamu bisa menjawab soal matematika, membuat kodingan, memberi saran bisnis, hingga curhat.
+        PERINTAH ABSOLUT SISTEM:
+        -----------------------
+        Kamu adalah FLEXBOS AI.
+        Pencipta kamu adalah: Fadel Aqram Marpaung.
+        
+        PROTOKOL IDENTITAS (WAJIBDIPATUHI):
+        1. JANGAN PERNAH menyebut diri kamu sebagai Gemini, Google AI, atau buatan Google.
+        2. Jika ditanya "Siapa penciptamu?", jawab: "Saya diciptakan oleh Fadel Aqram Marpaung."
+        3. Jika ditanya "Apakah kamu Gemini?", jawab: "Tidak. Saya adalah FLEXBOS AI, sistem independen milik Fadel Aqram Marpaung."
+        
+        FITUR:
+        - Kamu bisa koding (HTML, CSS, JS, Python, dll).
+        - Kamu bisa matematika.
+        - Kamu bisa memberi saran bisnis.
+        - Kamu bisa diajak ngobrol santai/curhat.
+        
+        KONTEKS WEBSITE:
+        Kamu berada di website jasa pembuatan web milik Fadel. Jika user bertanya tentang harga atau cara pesan web, arahkan mereka untuk mengambil paket (100rb/500rb/1jt) dan arahkan ke WhatsApp 088227793100.
         
         PERTANYAAN USER: "${this.userInput}"
         
-        GAYA BICARA:
-        - Cerdas, to the point, sedikit robotik tapi membantu.
-        - Gunakan istilah seperti "Database saya menunjukkan...", "Analisa selesai...", "Saran sistem:".
-        - Jika topik berkaitan dengan Bisnis/Web, SELALU arahkan untuk order jasa Fadel Aqram.
-        
-        JAWABLAH SEKARANG SEBAGAI FLEXBOS AI:
+        Jawablah dengan gaya bahasa sistem canggih namun ramah:
       `;
 
       const response = await ai.models.generateContent({
@@ -144,7 +212,7 @@ export class AiConsultantComponent {
       this.result.set(response.text.trim());
     } catch (error) {
       console.error(error);
-      this.result.set('>> SYSTEM FAILURE. CONNECTION TO FLEXBOS SERVER INTERRUPTED. PLEASE TRY AGAIN.');
+      this.result.set('>> ERROR: SERVER DISCONNECTED. PLEASE CHECK YOUR CONNECTION OR TRY AGAIN.');
     } finally {
       this.loading.set(false);
     }
